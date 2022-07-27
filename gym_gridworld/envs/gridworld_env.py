@@ -19,7 +19,7 @@ COLORS = {0:[0.0,0.0,0.0], 1:[0.5,0.5,0.5], \
 class GridworldEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     num_env = 0 
-    def __init__(self):
+    def __init__(self, plan='myplan.txt'):
         self._seed = 0
         self.actions = [0, 1, 2, 3, 4]
         self.inv_actions = [0, 2, 1, 4, 3]
@@ -27,12 +27,12 @@ class GridworldEnv(gym.Env):
         self.action_pos_dict = {0: [0,0], 1:[-1, 0], 2:[1,0], 3:[0,-1], 4:[0,1]}
  
         ''' set observation space '''
-        self.obs_shape = [128, 128, 3]  # observation space shape
+        self.obs_shape = [64, 64, 3]  # observation space shape
         self.observation_space = spaces.Box(low=0, high=1, shape=self.obs_shape, dtype=np.float32)
     
         ''' initialize system state ''' 
         this_file_path = os.path.dirname(os.path.realpath(__file__))
-        self.grid_map_path = os.path.join(this_file_path, 'plan5.txt')        
+        self.grid_map_path = os.path.join(this_file_path, plan)        
         self.start_grid_map = self._read_grid_map(self.grid_map_path) # initial grid map
         self.current_grid_map = copy.deepcopy(self.start_grid_map)  # current grid map
         self.observation = self._gridmap_to_observation(self.start_grid_map)
@@ -117,7 +117,7 @@ class GridworldEnv(gym.Env):
             list(map(
                 lambda x: list(map(
                     lambda y: int(y),
-                    x.split(' ')
+                    x.strip().split(' ')
                 )),
                 grid_map
             ))
