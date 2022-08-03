@@ -6,9 +6,12 @@ def make_grid(size, filename):
     middles = '1 '  + '0 ' * (size - 2) + '1\n'
 
     mid_lines = [middles] * (size - 3)
-    start_end_line = '1 3 4 '  + '0 ' * (size - 4) + '1\n'
 
-    grid_lines = [top_bottom, start_end_line] + mid_lines + [top_bottom]
+    left_right_start = '0 ' * ((size - 3) // 2) 
+    start_end_line = '1 ' + left_right_start + '3 4 ' + left_right_start + '1\n'
+    mid_lines.insert(size // 2 - 2, start_end_line)
+
+    grid_lines = [top_bottom] + mid_lines + [top_bottom]
 
     with open(filename, 'w') as f:
         f.writelines(grid_lines)
